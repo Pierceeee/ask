@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>A little question for you, Keira 💌</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
     --pink-2: #ffc2d6;
@@ -212,6 +215,30 @@
   @keyframes blink { 50% { opacity: 0; } }
   .note-continue { display: none; }
 
+  /* ---- Stationery / lined-paper look for the love note ---- */
+  .note-card.paper {
+    position: relative;
+    background-color: #fffdf7;
+    background-image:
+      linear-gradient(to right, transparent 0, transparent 46px, #f3b6cb 46px, #f3b6cb 48px, transparent 48px),
+      repeating-linear-gradient(to bottom, #fffdf7 0, #fffdf7 35px, #d8e7f2 35px, #d8e7f2 36px);
+    background-origin: content-box;
+    backdrop-filter: none;
+    border: 1px solid #efe7d6;
+    border-radius: 8px;
+    box-shadow: 0 18px 42px rgba(255, 130, 170, 0.30);
+    padding: 30px 30px 30px 62px;
+  }
+  .note-card.paper .emoji {
+    position: absolute; top: 12px; right: 18px; margin: 0; font-size: 30px;
+  }
+  .note-card.paper .note-text {
+    font-family: 'Caveat', 'Segoe Script', 'Bradley Hand', cursive;
+    font-size: 27px; line-height: 36px; color: #3b5aa6;
+    text-align: left; margin: 0; min-height: 252px;
+  }
+  .note-card.paper .caret { background: #3b5aa6; height: 1em; }
+
   /* ---- Polaroid photo ---- */
   .polaroid {
     background: #fff; padding: 12px 12px 46px; border-radius: 6px;
@@ -266,13 +293,8 @@
 
   <!-- Love note (typewriter) -->
   <div class="overlay hidden" id="noteScreen">
-    <div class="note-card">
-      <!-- Drop your photo next to this file, named exactly: us.jpg -->
-      <div class="polaroid" id="polaroid">
-        <img id="polaroidImg" src="us.jpg" alt="Keira & Allen"
-             onerror="document.getElementById('polaroid').classList.add('fallback')" />
-        <div class="cap">Keira &amp; Allen 💕</div>
-      </div>
+    <div class="note-card paper">
+      <div class="emoji">💌</div>
       <p class="note-text" id="noteText"></p>
       <div class="buttons">
         <button class="yes note-continue" id="noteContinue">Aww, what is it? 💕</button>
@@ -387,6 +409,11 @@
       <div class="big-heart">💗</div>
       <h1>It's a date, Keira!</h1>
       <p class="message">I can't stop smiling. Here's the little plan you made for us 🥹</p>
+      <div class="polaroid" id="polaroidFinal">
+        <img src="us.jpg" alt="Keira & Allen"
+             onerror="document.getElementById('polaroidFinal').classList.add('fallback')" />
+        <div class="cap">us, soon 💞</div>
+      </div>
       <div class="summary" id="summary"></div>
       <div class="buttons">
         <button class="yes" id="sendBtn">Send it to Allen 💌</button>
