@@ -6,13 +6,15 @@
 <title>A little question for you, Keira 💌</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
 <style>
   :root {
     --pink-2: #ffc2d6;
     --pink-3: #ff9ebb;
     --pink-4: #ff7aa8;
     --plum:   #8a4f6d;
+    --font-body:    "Nunito", "Segoe UI", system-ui, sans-serif;
+    --font-display: "Fraunces", "Georgia", serif;
   }
 
   * { box-sizing: border-box; }
@@ -20,18 +22,32 @@
   html, body {
     margin: 0;
     min-height: 100%;
-    font-family: "Segoe UI", "Helvetica Neue", system-ui, sans-serif;
+    font-family: var(--font-body);
     color: var(--plum);
   }
 
   body {
-    background: linear-gradient(135deg, #fff0f6 0%, #ffe3ec 40%, #ffd6e8 100%);
+    background:
+      radial-gradient(120% 80% at 50% 12%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 55%),
+      radial-gradient(90% 60% at 80% 100%, #ffc8df 0%, rgba(255,200,223,0) 60%),
+      linear-gradient(135deg, #fff0f6 0%, #ffe3ec 40%, #ffd6e8 100%);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 24px;
     overflow-x: hidden;
+  }
+  /* soft vignette so the edges fall away gently */
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    box-shadow: inset 0 0 180px 40px rgba(180, 70, 120, 0.10);
+  }
+  /* fine paper grain over everything for texture */
+  body::before {
+    content: ""; position: fixed; inset: 0; z-index: 20; pointer-events: none;
+    opacity: 0.35; mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
   /* ---- Floating hearts background ---- */
@@ -68,6 +84,11 @@
     width: 100%;
     box-shadow: 0 20px 60px rgba(255, 130, 170, 0.35);
   }
+  .card::before {
+    content: ""; position: absolute; inset: -40px; z-index: -1;
+    background: radial-gradient(60% 50% at 50% 30%, rgba(255,158,187,0.45), rgba(255,158,187,0) 70%);
+    filter: blur(12px);
+  }
 
   .step { display: none; animation: pop-in 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28); }
   .step.active { display: block; }
@@ -82,9 +103,13 @@
     50%      { transform: scale(1.18); opacity: 0.75; }
   }
 
-  h1 { font-size: clamp(24px, 5.5vw, 38px); margin: 10px 0 6px; font-weight: 700; }
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5.8vw, 40px); margin: 10px 0 6px; font-weight: 600;
+    letter-spacing: -0.5px; line-height: 1.12;
+  }
   .message { font-size: clamp(15px, 3.4vw, 18px); line-height: 1.65; margin: 14px 0 24px; color: #9c5d77; }
-  .signature { font-style: italic; font-size: 16px; margin-top: 10px; color: var(--plum); }
+  .signature { font-family: var(--font-display); font-style: italic; font-size: 17px; margin-top: 10px; color: var(--plum); }
 
   /* ---- Buttons ---- */
   .buttons { display: flex; gap: 16px; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 22px; }
@@ -268,6 +293,25 @@
   }
   .music-btn.show { display: block; }
   .music-btn.muted { opacity: 0.55; }
+
+  /* ---- Staggered summary reveal ---- */
+  .summary div {
+    opacity: 0; transform: translateY(8px);
+    animation: row-in 0.5s ease forwards;
+  }
+  @keyframes row-in { to { opacity: 1; transform: translateY(0); } }
+
+  /* ---- Respect reduced-motion preference ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    .hearts, .confetti { display: none !important; }
+    .summary div { opacity: 1 !important; transform: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -408,7 +452,7 @@
     <section class="step" id="step-7">
       <div class="big-heart">💗</div>
       <h1>It's a date, Keira!</h1>
-      <p class="message">I can't stop smiling. Here's the little plan you made for us 🥹</p>
+      <p class="message">Out of every day there could be, you said yes to one with me — and I can't stop smiling. Here's the little plan we made together 🥹</p>
       <div class="polaroid" id="polaroidFinal">
         <img src="us.jpg" alt="Keira & Allen"
              onerror="document.getElementById('polaroidFinal').classList.add('fallback')" />
@@ -417,8 +461,9 @@
       <div class="summary" id="summary"></div>
       <div class="buttons">
         <button class="yes" id="sendBtn">Send it to Allen 💌</button>
+        <button class="no" id="copyBtn">Copy instead 📋</button>
       </div>
-      <p class="signature">Counting down the days — Allen 💞</p>
+      <p class="signature" id="sendNote">Counting down the days — Allen 💞</p>
     </section>
 
     <div class="dots" id="dots"></div>
@@ -433,7 +478,9 @@
   // ---------- Floating hearts ----------
   const heartLayer = document.getElementById('hearts');
   const heartChars = ['💗', '💕', '🌸', '💖', '💞', '🩷'];
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   function spawnHeart() {
+    if (reduceMotion) return;
     const h = document.createElement('span');
     h.className = 'heart';
     h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
@@ -444,7 +491,16 @@
     heartLayer.appendChild(h);
     setTimeout(() => h.remove(), dur * 1000);
   }
-  setInterval(spawnHeart, 500);
+  // Only spawn while the tab is visible — saves work on a backgrounded tab.
+  let heartTimer = null;
+  function startHearts() {
+    if (heartTimer || reduceMotion) return;
+    heartTimer = setInterval(spawnHeart, 500);
+  }
+  function stopHearts() { clearInterval(heartTimer); heartTimer = null; }
+  document.addEventListener('visibilitychange', () =>
+    document.hidden ? stopHearts() : startHearts());
+  startHearts();
   for (let i = 0; i < 8; i++) setTimeout(spawnHeart, i * 200);
 
   // ---------- Progress dots ----------
@@ -471,13 +527,20 @@
     if (e) { e.preventDefault(); }
     teaseIndex = (teaseIndex + 1) % teases.length;
     noBtn.textContent = teases[teaseIndex];
-    const maxX = Math.min(window.innerWidth * 0.35, 160);
-    const maxY = Math.min(window.innerHeight * 0.30, 140);
-    const x = (Math.random() * 2 - 1) * maxX;
-    const y = (Math.random() * 2 - 1) * maxY;
-    noBtn.style.position = 'relative';
-    noBtn.style.transition = 'transform 0.25s ease';
-    noBtn.style.transform = `translate(${x}px, ${y}px) scale(${Math.max(0.55, 1 - teaseIndex * 0.05)})`;
+    const scale = Math.max(0.55, 1 - teaseIndex * 0.05);
+    const r = noBtn.getBoundingClientRect();
+    const pad = 12;
+    // Pick a random spot that always keeps the whole button inside the viewport.
+    const maxLeft = Math.max(pad, window.innerWidth  - r.width  - pad);
+    const maxTop  = Math.max(pad, window.innerHeight - r.height - pad);
+    const left = pad + Math.random() * (maxLeft - pad);
+    const top  = pad + Math.random() * (maxTop  - pad);
+    noBtn.style.position = 'fixed';
+    noBtn.style.margin = '0';
+    noBtn.style.left = left + 'px';
+    noBtn.style.top  = top  + 'px';
+    noBtn.style.transition = 'left 0.25s ease, top 0.25s ease, transform 0.25s ease';
+    noBtn.style.transform = `scale(${scale})`;
     document.getElementById('yesBtn').style.transform = `scale(${1 + Math.min(teaseIndex * 0.05, 0.4)})`;
   }
   // Run away from every kind of interaction — mouse, touch, and even focus.
@@ -546,20 +609,23 @@
 
   // ---------- Finish ----------
   document.getElementById('finishBtn').addEventListener('click', () => {
-    document.getElementById('summary').innerHTML = `
-      <div>📅 <b>Date:</b> ${plan.date}</div>
-      <div>⏰ <b>Time:</b> ${plan.time}</div>
-      <div>🍔 <b>Food:</b> ${plan.food}</div>
-      <div>🎬 <b>Movie:</b> ${plan.movie}</div>
-      <div>💖 <b>Excitement:</b> ${plan.excitement}</div>`;
+    const rows = [
+      `📅 <b>Date:</b> ${plan.date}`,
+      `⏰ <b>Time:</b> ${plan.time}`,
+      `🍔 <b>Food:</b> ${plan.food}`,
+      `🎬 <b>Movie:</b> ${plan.movie}`,
+      `💖 <b>Excitement:</b> ${plan.excitement}`,
+    ];
+    document.getElementById('summary').innerHTML = rows
+      .map((r, i) => `<div style="animation-delay:${0.15 + i * 0.18}s">${r}</div>`)
+      .join('');
     goTo(7);
     bigCelebrate();
   });
 
-  // ---------- Send to Allen (opens email) ----------
-  document.getElementById('sendBtn').addEventListener('click', () => {
-    const body =
-`Hi Allen, it's a date! 💖
+  // ---------- Send to Allen (email, with copy fallback) ----------
+  function planMessage() {
+    return `Hi Allen, it's a date! 💖
 
 📅 Date: ${plan.date}
 ⏰ Time: ${plan.time}
@@ -568,8 +634,28 @@
 💖 Excitement: ${plan.excitement}
 
 Can't wait! — Keira`;
+  }
+  const sendNote = document.getElementById('sendNote');
+  document.getElementById('sendBtn').addEventListener('click', () => {
     window.location.href =
-      `mailto:allenvynz7@gmail.com?subject=${encodeURIComponent("It's a date, Allen! 💞")}&body=${encodeURIComponent(body)}`;
+      `mailto:allenvynz7@gmail.com?subject=${encodeURIComponent("It's a date, Allen! 💞")}&body=${encodeURIComponent(planMessage())}`;
+    // If no mail app opens, gently point to the copy button.
+    sendNote.textContent = 'No email app? Tap “Copy instead” and paste it to him 💌';
+  });
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const text = planMessage();
+    try {
+      await navigator.clipboard.writeText(text);
+      sendNote.textContent = 'Copied! Paste it to Allen anywhere you like 💞';
+    } catch {
+      // Fallback for browsers without clipboard permission.
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); sendNote.textContent = 'Copied! Paste it to Allen 💞'; }
+      catch { sendNote.textContent = 'Couldn\'t copy — just screenshot this plan for Allen 📸💕'; }
+      ta.remove();
+    }
   });
 
   // ---------- Background music ----------
@@ -683,6 +769,7 @@ So I made this little page — just for you. 💕`;
   // ---------- Confetti / bursts ----------
   function burst() { for (let i = 0; i < 25; i++) setTimeout(spawnHeart, i * 50); }
   function bigCelebrate() {
+    if (reduceMotion) return;
     const pieces = ['💗', '💕', '🌸', '💖', '🎉', '✨', '🩷', '💞'];
     for (let i = 0; i < 80; i++) {
       setTimeout(() => {
